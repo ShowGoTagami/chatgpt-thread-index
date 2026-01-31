@@ -1,0 +1,25 @@
+{
+  "name": "chatgpt-question-navigator",
+  "version": "1.0.0",
+  "description": "Chrome extension to improve ChatGPT chat searchability and visibility",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/content_script.ts --bundle --outfile=dist/content_script.js --format=iife",
+    "watch": "esbuild src/content_script.ts --bundle --outfile=dist/content_script.js --format=iife --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "jsdom": "^24.0.0"
+  },
+  "keywords": [
+    "chrome-extension",
+    "chatgpt",
+    "navigation"
+  ],
+  "license": "MIT"
+}
