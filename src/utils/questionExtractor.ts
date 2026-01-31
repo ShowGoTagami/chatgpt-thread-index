@@ -39,13 +39,16 @@ export function extractQuestions(): Question[] {
     const fullText = rawText.replace(/\n/g, ' ');
     const displayText = formatDisplayText(fullText);
 
+    // Find the bubble element for highlighting, fallback to parent element
+    const bubbleElement = element.querySelector('.user-message-bubble-color') || element;
+
     questions.push({
       id: `question-${index}`,
       index,
       label: `Q${index + 1}`,
       fullText,
       displayText,
-      element,
+      element: bubbleElement,
     });
   });
 

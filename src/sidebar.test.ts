@@ -37,7 +37,7 @@ describe('sidebar', () => {
       createSidebar();
       const header = document.querySelector('.cgpt-nav-header');
       expect(header).not.toBeNull();
-      expect(header?.textContent).toContain('Questions');
+      expect(header?.textContent).toContain('Chat');
     });
 
     it('should include a scrollable list container', () => {

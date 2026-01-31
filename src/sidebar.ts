@@ -1,5 +1,9 @@
 import type { Question } from './types';
-import { CSS_CLASSES } from './utils/domSelectors';
+import { CSS_CLASSES, CONFIG } from './utils/domSelectors';
+
+const MIN_SIDEBAR_WIDTH = 180;
+const MAX_SIDEBAR_WIDTH = 500;
+const STORAGE_KEY = 'cgpt-nav-sidebar-width';
 
 let sidebarElement: HTMLElement | null = null;
 let listElement: HTMLElement | null = null;
@@ -18,10 +22,16 @@ export function createSidebar(): HTMLElement {
   sidebarElement = document.createElement('aside');
   sidebarElement.className = CSS_CLASSES.SIDEBAR;
 
+  // Create resize handle
+  const resizeHandle = document.createElement('div');
+  resizeHandle.className = 'cgpt-nav-resize-handle';
+  sidebarElement.appendChild(resizeHandle);
+  setupResizeHandler(resizeHandle, sidebarElement);
+
   // Create header
   const header = document.createElement('header');
   header.className = CSS_CLASSES.HEADER;
-  header.textContent = 'Questions';
+  header.textContent = 'Chat';
   sidebarElement.appendChild(header);
 
   // Create list container
@@ -141,6 +151,61 @@ export function setSelectedQuestion(questionId: string | null): void {
  */
 export function getQuestions(): Question[] {
   return currentQuestions;
+}
+
+/**
+ * Sets up the resize handler for dragging the sidebar width
+ */
+function setupResizeHandler(handle: HTMLElement, sidebar: HTMLElement): void {
+  let isResizing = false;
+  let startX = 0;
+  let startWidth = 0;
+
+  // Load saved width
+  const savedWidth = localStorage.getItem(STORAGE_KEY);
+  if (savedWidth) {
+    const width = parseInt(savedWidth, 10);
+    if (width >= MIN_SIDEBAR_WIDTH && width <= MAX_SIDEBAR_WIDTH) {
+      sidebar.style.width = `${width}px`;
+    }
+  }
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isResizing) return;
+
+    const deltaX = startX - e.clientX;
+    const newWidth = Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, startWidth + deltaX));
+    sidebar.style.width = `${newWidth}px`;
+  };
+
+  const onMouseUp = () => {
+    if (!isResizing) return;
+
+    isResizing = false;
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+
+    // Save width to localStorage
+    const currentWidth = sidebar.offsetWidth;
+    localStorage.setItem(STORAGE_KEY, String(currentWidth));
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  handle.addEventListener('mousedown', (e: MouseEvent) => {
+    isResizing = true;
+    startX = e.clientX;
+    startWidth = sidebar.offsetWidth;
+
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+    e.preventDefault();
+  });
 }
 
 /**

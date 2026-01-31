@@ -16,6 +16,27 @@
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Resize handle */
+.cgpt-nav-resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+  z-index: 10001;
+}
+
+.cgpt-nav-resize-handle:hover {
+  background-color: #10a37f;
+}
+
+.cgpt-nav-resize-handle:active {
+  background-color: #10a37f;
+}
+
 .cgpt-nav-header {
   padding: 16px;
   border-bottom: 1px solid #333;
@@ -101,4 +122,22 @@
 
 .cgpt-nav-list::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Question highlight in chat - targets bubble element */
+.cgpt-nav-highlight {
+  animation: cgpt-nav-highlight-pulse 2s ease-out;
+  box-shadow: 0 0 0 3px #10a37f, 0 0 20px rgba(16, 163, 127, 0.4);
+}
+
+@keyframes cgpt-nav-highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 3px #10a37f, 0 0 20px rgba(16, 163, 127, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 3px #10a37f, 0 0 20px rgba(16, 163, 127, 0.4);
+  }
+  100% {
+    box-shadow: none;
+  }
 }
